@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Evaluación - Objetos Gramática</title>
+    <script src="https://unpkg.com/xapiwrapper@1.11.0/dist/xapiwrapper.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            color: #667eea;
+            margin-top: 0;
+            font-size: 22px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+        .scale-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            gap: 10px;
+        }
+        .scale-option {
+            flex: 1;
+            text-align: center;
+        }
+        .scale-option input[type="radio"] {
+            display: block;
+            margin: 0 auto 5px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .scale-option label {
+            font-size: 12px;
+            color: #666;
+            display: block;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .info-box {
+            background-color: #e0e7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: transform 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success-message {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .error-message {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        .demographic {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .demographic label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #2d3748;
+        }
+        .demographic input, .demographic select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+        .config-section {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .config-section label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #1e40af;
+        }
+        .config-section input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Encuesta de Evaluación Docente</h1>
+        <p>Objeto de Aprendizaje Interactivo para Enseñanza de Gramática</p>
+    </div>
+
+    <!-- Configuración xAPI (Simplificada) -->
+    <div class="config-section">
+        <h3>Configuración de Envío de Datos</h3>
+        <p>Los parámetros del LRS (Endpoint y Credenciales) han sido pre-configurados. Solo necesita ingresar su identificador.</p>
+        
+        <label>ID del Evaluador (email):</label>
+        <input type="email" id="evaluatorId" placeholder="profesor@ucn.edu.co" required>
+    </div>
+
+    <!-- Mensajes de estado -->
+    <div id="successMessage" class="success-message">
+        <strong>¡Éxito!</strong> La encuesta ha sido enviada correctamente al LRS.
+        <br>ID del Statement: <span id="statementId"></span>
+    </div>
+
+    <div id="errorMessage" class="error-message">
+        <strong>Error:</strong> <span id="errorText"></span>
+    </div>
+
+    <form id="surveyForm">
+        <!-- SECCIÓN 1: INFORMACIÓN DEMOGRÁFICA -->
+        <div class="section">
+            <h2>1. Información del Evaluador</h2>
+            <div class="info-box">
+                <strong>Institución:</strong> Fundación Universitaria Católica del Norte (UCN)<br>
+                <strong>Nivel educativo:</strong> Universitario
+            </div>
+            <div class="demographic">
+                <div>
+                    <label>Nivel del contenido evaluado:</label>
+                    <select name="level_evaluated" required>
+                        <option value="">Seleccione...</option>
+                        <option value="A1.1">A1.1</option>
+                        <option value="A1.2">A1.2</option>
+                        <option value="A2.1">A2.1</option>
+                        <option value="A2.2">A2.2</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Unidad evaluada:</label>
+                    <select name="unit_evaluated" required>
+                        <option value="">Seleccione...</option>
+                        <option value="1">Unidad 1</option>
+                        <option value="2">Unidad 2</option>
+                        <option value="3">Unidad 3</option>
+                        <option value="4">Unidad 4</option>
+                        <option value="5">Unidad 5</option>
+                        <option value="6">Unidad 6</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tema gramatical específico:</label>
+                    <input type="text" name="topic_evaluated" placeholder="Ej: Present Simple, Past Continuous, etc." required>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: COMPONENTE EXPLICATIVO -->
+        <div class="section">
+            <h2>2. Componente Explicativo (Explanation)</h2>
+            
+            <div class="question">
+                <div class="question-text">2.1. La organización del contenido gramatical en secciones desplegables facilita el aprendizaje autónomo.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q2_1" value="1" required>
+                        <label>1<br>Totalmente en desacuerdo</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_1" value="2">
+                        <label>2<br>En desacuerdo</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_1" value="3">
+                        <label>3<br>Neutral</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_1" value="4">
+                        <label>4<br>De acuerdo</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_1" value="5">
+                        <label>5<br>Totalmente de acuerdo</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2.2. Los ejemplos proporcionados son claros, relevantes y apropiados para el nivel evaluado.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q2_2" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_2" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_2" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_2" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_2" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2.3. Las tablas de estructuras gramaticales presentan la información de manera efectiva.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q2_3" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_3" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_3" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_3" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_3" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2.4. La cobertura de los aspectos gramaticales del tema es completa y equilibrada.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q2_4" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_4" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_4" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_4" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q2_4" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Comentarios o sugerencias sobre el componente explicativo:</div>
+                <textarea name="q2_comments" placeholder="¿Qué mejoraría? ¿Qué falta? ¿Qué está particularmente bien?"></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: CUESTIONARIO CLÁSICO -->
+        <div class="section">
+            <h2>3. Cuestionario Clásico (Classic Quiz)</h2>
+            
+            <div class="question">
+                <div class="question-text">3.1. El banco de preguntas cubre adecuadamente los diferentes aspectos del tema gramatical.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q3_1" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_1" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_1" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_1" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_1" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3.2. La dificultad de las preguntas es apropiada para el nivel evaluado.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q3_2" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_2" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_2" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_2" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_2" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3.3. El formato de retroalimentación inmediata (mostrar respuesta correcta/incorrecta) es pedagógicamente efectivo.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q3_3" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_3" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_3" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_3" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_3" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3.4. La selección aleatoria de 15 preguntas promueve la práctica repetida sin memorización mecánica.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q3_4" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_4" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_4" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_4" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q3_4" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Comentarios sobre el cuestionario clásico:</div>
+                <textarea name="q3_comments" placeholder="¿Detectó errores en las preguntas? ¿Agregaría otros tipos de ejercicios?"></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: JUEGO INTERACTIVO -->
+        <div class="section">
+            <h2>4. Juego Interactivo (Game Quiz)</h2>
+            
+            <div class="question">
+                <div class="question-text">4.1. El juego de disparar o saltar sobre las respuestas correctas es atractivo y motivador para estudiantes de esta edad.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q4_1" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_1" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_1" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_1" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_1" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4.2. La mecánica del juego (controles, sistema de vidas, puntuación) es clara y fácil de entender.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q4_2" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_2" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_2" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_2" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_2" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4.3. El juego equilibra adecuadamente el componente lúdico con el objetivo pedagógico de practicar gramática.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q4_3" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_3" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_3" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_3" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_3" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4.4. El nivel de dificultad del juego (velocidad, movimiento) es apropiado y no interfiere con el aprendizaje.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q4_4" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_4" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_4" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_4" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q4_4" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Comentarios sobre el juego interactivo:</div>
+                <textarea name="q4_comments" placeholder="¿El juego es demasiado fácil/difícil? ¿Sugeriría modificaciones?"></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: USABILIDAD Y DISEÑO -->
+        <div class="section">
+            <h2>5. Usabilidad y Diseño General</h2>
+            
+            <div class="question">
+                <div class="question-text">5.1. La navegación entre secciones (Explanation, Classic Quiz, Game) es intuitiva.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q5_1" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_1" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_1" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_1" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_1" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5.2. El diseño visual es atractivo y apropiado para el público objetivo.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q5_2" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_2" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_2" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_2" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_2" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5.3. El recurso es responsivo y funciona adecuadamente en diferentes dispositivos.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q5_3" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_3" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_3" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_3" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_3" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5.4. La función de pantalla completa contribuye positivamente a la experiencia de uso.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q5_4" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_4" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_4" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_4" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q5_4" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 6: APLICABILIDAD PEDAGÓGICA -->
+        <div class="section">
+            <h2>6. Aplicabilidad Pedagógica</h2>
+            
+            <div class="question">
+                <div class="question-text">6.1. Este recurso puede integrarse efectivamente en mi planificación de clases.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q6_1" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_1" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_1" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_1" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_1" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6.2. El recurso promueve el aprendizaje autónomo de los estudiantes.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q6_2" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_2" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_2" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_2" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_2" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6.3. La variedad de actividades (explicación, práctica y juego) atiende diferentes estilos de aprendizaje.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q6_3" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_3" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_3" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_3" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_3" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">6.4. Utilizaría este recurso en mis clases de gramática.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q6_4" value="1" required>
+                        <label>1</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_4" value="2">
+                        <label>2</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_4" value="3">
+                        <label>3</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_4" value="4">
+                        <label>4</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q6_4" value="5">
+                        <label>5</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Comentarios generales sobre aplicabilidad pedagógica:</div>
+                <textarea name="q6_comments" placeholder="¿Cómo integraría este recurso en sus clases? ¿Qué modificaciones sugeriría?"></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 7: EVALUACIÓN GENERAL -->
+        <div class="section">
+            <h2>7. Evaluación General</h2>
+            
+            <div class="question">
+                <div class="question-text">7.1. Califique globalmente la calidad del objeto de aprendizaje.</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q7_1" value="1" required>
+                        <label>1<br>Muy baja</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_1" value="2">
+                        <label>2<br>Baja</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_1" value="3">
+                        <label>3<br>Regular</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_1" value="4">
+                        <label>4<br>Buena</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_1" value="5">
+                        <label>5<br>Excelente</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">7.2. ¿Recomendaría este recurso a otros profesores de inglés?</div>
+                <div class="scale-container">
+                    <div class="scale-option">
+                        <input type="radio" name="q7_2" value="1" required>
+                        <label>1<br>Definitivamente no</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_2" value="2">
+                        <label>2<br>Probablemente no</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_2" value="3">
+                        <label>3<br>Tal vez</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_2" value="4">
+                        <label>4<br>Probablemente sí</label>
+                    </div>
+                    <div class="scale-option">
+                        <input type="radio" name="q7_2" value="5">
+                        <label>5<br>Definitivamente sí</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Comentarios finales y sugerencias de mejora:</div>
+                <textarea name="q7_comments" placeholder="Comparta cualquier observación adicional, sugerencias de mejora o aspectos destacables del recurso evaluado."></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+            Enviar Encuesta al LRS
+        </button>
+    </form>
+
+    <script>
+        // ***************************************************************
+        // ESTAS SON LAS LÍNEAS QUE DEBE CONFIGURAR AUTOMÁTICAMENTE:
+        // ***************************************************************
+        const HARDCODED_ENDPOINT = "https://ucn-material-evaluation.lrs.io/xapi/"; 
+        const HARDCODED_USER = "9e21f1cc-d5b9-49ee-8ea1-bbd255548844"; 
+        const HARDCODED_PASSWORD = "a876ba79-dd8d-4e22-a371-2c1fc9326f40"; 
+        // ***************************************************************
+
+        // Configuración inicial de xAPI
+        let xAPIWrapper;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar event listeners después de que el DOM esté cargado
+            document.getElementById('surveyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitSurvey();
+            });
+
+            // Agregar event listeners a todos los campos del formulario
+            setupFormValidation();
+            
+            // Ejecutar validación inicial
+            validateForm();
+        });
+
+        function setupFormValidation() {
+            const form = document.getElementById('surveyForm');
+            const evaluatorField = document.getElementById('evaluatorId');
+            
+            // Agregar event listeners a todos los campos de entrada
+            const allInputs = form.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
+            
+            // También agregar listeners a los radio buttons individualmente
+            const radioButtons = form.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', validateForm);
+            });
+            
+            // Agregar listener al campo de email del evaluador
+            if (evaluatorField) {
+                evaluatorField.addEventListener('input', validateForm);
+                evaluatorField.addEventListener('change', validateForm);
+            }
+        }
+
+        function initXAPI() {
+            const evaluatorId = document.getElementById('evaluatorId').value;
+
+            // Validar solo el ID del Evaluador (el resto está hardcodeado)
+            if (!evaluatorId) {
+                showError('Por favor, ingrese su ID de Evaluador (email).');
+                return false;
+            }
+
+            // Usar los valores hardcodeados
+            const endpoint = HARDCODED_ENDPOINT;
+            const user = HARDCODED_USER;
+            const password = HARDCODED_PASSWORD;
+
+            try {
+                // Configurar xAPI
+                const conf = {
+                    "endpoint": endpoint,
+                    "auth": "Basic " + btoa(user + ":" + password),
+                    "version": "1.0.3"
+                };
+                
+                xAPIWrapper = ADL.XAPIWrapper;
+                xAPIWrapper.changeConfig(conf);
+                
+                return true;
+            } catch (error) {
+                showError('Error al configurar la conexión con el LRS: ' + error.message);
+                return false;
+            }
+        }
+
+        function collectFormData() {
+            const formData = new FormData(document.getElementById('surveyForm'));
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            return data;
+        }
+
+        function calculateScores(data) {
+            const sections = {
+                explanation: ['q2_1', 'q2_2', 'q2_3', 'q2_4'],
+                classicQuiz: ['q3_1', 'q3_2', 'q3_3', 'q3_4'],
+                gameQuiz: ['q4_1', 'q4_2', 'q4_3', 'q4_4'],
+                usability: ['q5_1', 'q5_2', 'q5_3', 'q5_4'],
+                pedagogy: ['q6_1', 'q6_2', 'q6_3', 'q6_4'],
+                general: ['q7_1', 'q7_2']
+            };
+
+            const scores = {};
+            let totalScore = 0;
+            let totalQuestions = 0;
+
+            for (let [sectionName, questions] of Object.entries(sections)) {
+                let sectionScore = 0;
+                let sectionCount = 0;
+
+                questions.forEach(q => {
+                    if (data[q]) {
+                        sectionScore += parseInt(data[q]);
+                        sectionCount++;
+                        totalScore += parseInt(data[q]);
+                        totalQuestions++;
+                    }
+                });
+
+                scores[sectionName] = sectionCount > 0 ? (sectionScore / sectionCount) : 0;
+            }
+
+            scores.overall = totalQuestions > 0 ? (totalScore / totalQuestions) : 0;
+            return scores;
+        }
+
+        function createXAPIStatement(data, scores) {
+            const evaluatorId = document.getElementById('evaluatorId').value;
+            const timestamp = new Date().toISOString();
+            
+            const statement = {
+                "actor": {
+                    "mbox": "mailto:" + evaluatorId,
+                    "name": "Evaluador UCN"
+                },
+                "verb": {
+                    "id": "http://adlnet.gov/expapi/verbs/completed",
+                    "display": {
+                        "es": "completó",
+                        "en-US": "completed"
+                    }
+                },
+                "object": {
+                    "id": "http://ucn.edu.co/learning-objects/grammar-evaluation-survey",
+                    "definition": {
+                        "name": {
+                            "es": "Encuesta de Evaluación - Objeto de Aprendizaje de Gramática",
+                            "en-US": "Grammar Learning Object Evaluation Survey"
+                        },
+                        "description": {
+                            "es": "Encuesta para evaluar la calidad y efectividad del objeto de aprendizaje interactivo para enseñanza de gramática inglesa",
+                            "en-US": "Survey to evaluate the quality and effectiveness of the interactive learning object for English grammar teaching"
+                        },
+                        "type": "http://adlnet.gov/expapi/activities/assessment"
+                    }
+                },
+                "result": {
+                    "completion": true,
+                    "success": true,
+                    "score": {
+                        "scaled": scores.overall / 5,
+                        "raw": scores.overall,
+                        "min": 1,
+                        "max": 5
+                    },
+                    "extensions": {
+                        "http://ucn.edu.co/xapi/extensions/demographic-info": {
+                            "level_evaluated": data.level_evaluated,
+                            "unit_evaluated": data.unit_evaluated,
+                            "topic_evaluated": data.topic_evaluated
+                        },
+                        "http://ucn.edu.co/xapi/extensions/section-scores": {
+                            "explanation": scores.explanation,
+                            "classicQuiz": scores.classicQuiz,
+                            "gameQuiz": scores.gameQuiz,
+                            "usability": scores.usability,
+                            "pedagogy": scores.pedagogy,
+                            "general": scores.general
+                        },
+                        "http://ucn.edu.co/xapi/extensions/detailed-responses": data,
+                        "http://ucn.edu.co/xapi/extensions/evaluation-metadata": {
+                            "institution": "Fundación Universitaria Católica del Norte",
+                            "evaluation_type": "teacher_evaluation",
+                            "learning_object_type": "interactive_grammar_tool",
+                            "evaluation_date": timestamp
+                        }
+                    }
+                },
+                "context": {
+                    "platform": "UCN Learning Object Evaluation System",
+                    "language": "es",
+                    "extensions": {
+                        "http://ucn.edu.co/xapi/extensions/session-info": {
+                            "user_agent": navigator.userAgent,
+                            "screen_resolution": screen.width + "x" + screen.height,
+                            "submission_timestamp": timestamp
+                        }
+                    }
+                },
+                "timestamp": timestamp
+            };
+
+            return statement;
+        }
+
+        function submitSurvey() {
+            // Validar configuración (ahora solo valida el email y los hardcoded values)
+            if (!initXAPI()) {
+                return;
+            }
+
+            // Deshabilitar botón
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                // Recopilar datos del formulario
+                const formData = collectFormData();
+                
+                // Calcular puntajes por sección
+                const scores = calculateScores(formData);
+                
+                // Crear statement xAPI
+                const statement = createXAPIStatement(formData, scores);
+                
+                // Enviar al LRS
+                xAPIWrapper.sendStatement(statement, function(error, result) {
+                    if (error) {
+                        // El error puede ser un objeto o string, intentamos extraer el mensaje
+                        let errorMessage = 'Error desconocido al enviar. Revise su Endpoint y credenciales hardcodeadas.';
+                        if (typeof error === 'string') {
+                            errorMessage = error;
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        showError('Error al enviar los datos al LRS: ' + errorMessage);
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Enviar Encuesta al LRS';
+                    } else {
+                        showSuccess('Encuesta enviada exitosamente. ID: ' + result.id);
+                        document.getElementById('statementId').textContent = result.id;
+                        
+                        // Opcionalmente, deshabilitar el formulario después del envío exitoso
+                        const form = document.getElementById('surveyForm');
+                        const inputs = form.querySelectorAll('input, textarea, select, button');
+                        inputs.forEach(input => input.disabled = true);
+                    }
+                });
+
+            } catch (error) {
+                showError('Error al procesar los datos de la encuesta: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Encuesta al LRS';
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.classList.add('show');
+            
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.classList.remove('show');
+            
+            // Scroll to top para mostrar el mensaje
+            window.scrollTo(0, 0);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.add('show');
+            
+            const successDiv = document.getElementById('successMessage');
+            successDiv.classList.remove('show');
+            
+            // Scroll to top para mostrar el mensaje
+            window.scrollTo(0, 0);
+        }
+
+        function validateForm() {
+            const form = document.getElementById('surveyForm');
+            const evaluatorField = document.getElementById('evaluatorId');
+            
+            let allValid = true;
+            
+            // Validar campo del Evaluador ID
+            if (!evaluatorField || !evaluatorField.value.trim()) {
+                allValid = false;
+            }
+            
+            // Validar campos requeridos del formulario
+            const requiredFields = form.querySelectorAll('[required]');
+            const radioGroups = new Set();
+            
+            requiredFields.forEach(field => {
+                if (field.type === 'radio') {
+                    // Agregar el nombre del grupo de radio buttons
+                    radioGroups.add(field.name);
+                } else {
+                    // Para otros tipos de campos, verificar si tienen valor
+                    if (!field.value || field.value.trim() === '') {
+                        allValid = false;
+                    }
+                }
+            });
+            
+            // Validar grupos de radio buttons
+            for (let groupName of radioGroups) {
+                const selected = form.querySelector(`input[name="${groupName}"]:checked`);
+                if (!selected) {
+                    allValid = false;
+                    break;
+                }
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = !allValid;
+            }
+        }
+    </script>
+</body>
+</html>
